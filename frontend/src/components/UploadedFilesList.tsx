@@ -4,7 +4,12 @@ import { useNavigate } from 'react-router-dom'
 import { useUploadedFiles, UploadedFile } from '../hooks/useUploadedFiles'
 // Using native JavaScript date formatting instead of date-fns
 
-export default function UploadedFilesList() {
+interface UploadedFilesListProps {
+  limit?: number
+  showViewMore?: boolean
+}
+
+export default function UploadedFilesList({ limit, showViewMore = false }: UploadedFilesListProps) {
   const { files, loading, error, deleteFile, fetchFiles } = useUploadedFiles()
   const navigate = useNavigate()
   
@@ -98,6 +103,9 @@ export default function UploadedFilesList() {
     )
   }
 
+  const displayFiles = limit ? files.slice(0, limit) : files
+  const hasMoreFiles = limit && files.length > limit
+
   return (
     <div className="space-y-4">
       <h3 className="text-lg font-semibold text-gray-900 mb-4">
@@ -105,7 +113,7 @@ export default function UploadedFilesList() {
       </h3>
       
       <div className="space-y-3">
-        {files.map((file) => (
+        {displayFiles.map((file) => (
           <div
             key={file.id}
             className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-sm transition-shadow cursor-pointer"
@@ -169,6 +177,20 @@ export default function UploadedFilesList() {
           </div>
         ))}
       </div>
+      
+      {hasMoreFiles && showViewMore && (
+        <div className="text-center pt-4">
+          <button
+            onClick={() => navigate('/files')}
+            className="inline-flex items-center px-4 py-2 text-sm font-medium text-blue-600 hover:text-blue-800 transition-colors"
+          >
+            View More ({files.length - limit} more)
+            <svg className="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        </div>
+      )}
     </div>
   )
 }

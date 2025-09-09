@@ -11,6 +11,7 @@ export default function SignUp() {
   const [loading, setLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [agreeToTerms, setAgreeToTerms] = useState(false)
   
   const { signUp, signInWithGoogle } = useAuth()
   const navigate = useNavigate()
@@ -18,7 +19,7 @@ export default function SignUp() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
-    if (!email || !password || !confirmPassword) {
+    if (!email || !password || !confirmPassword || !agreeToTerms) {
       return
     }
 
@@ -135,10 +136,42 @@ export default function SignUp() {
           </div>
         )}
 
+        {/* Terms Agreement Checkbox */}
+        <div className="flex items-start">
+          <div className="flex items-center h-5">
+            <input
+              id="agree-terms"
+              name="agree-terms"
+              type="checkbox"
+              checked={agreeToTerms}
+              onChange={(e) => setAgreeToTerms(e.target.checked)}
+              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+            />
+          </div>
+          <div className="ml-3 text-sm">
+            <label htmlFor="agree-terms" className="text-gray-600">
+              I agree to the{' '}
+              <Link
+                to="/terms"
+                className="text-blue-600 hover:text-blue-500 transition-colors"
+              >
+                Terms of Service
+              </Link>
+              {' '}and{' '}
+              <Link
+                to="/privacy"
+                className="text-blue-600 hover:text-blue-500 transition-colors"
+              >
+                Privacy Policy
+              </Link>
+            </label>
+          </div>
+        </div>
+
         {/* Sign Up Button */}
         <button
           type="submit"
-          disabled={loading || !email || !password || !confirmPassword || password !== confirmPassword}
+          disabled={loading || !email || !password || !confirmPassword || password !== confirmPassword || !agreeToTerms}
           className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
           {loading ? (

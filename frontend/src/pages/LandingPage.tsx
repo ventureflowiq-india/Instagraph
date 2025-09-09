@@ -1,10 +1,11 @@
 // src/pages/LandingPage.tsx
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 
 export default function LandingPage() {
+  const [isAnnual, setIsAnnual] = useState(false)
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50">
+    <div className="min-h-screen bg-white">
       {/* Header */}
       <header className="relative z-10">
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -23,6 +24,12 @@ export default function LandingPage() {
               </a>
             </div>
             <div className="flex items-center space-x-4">
+              <Link
+                to="/about"
+                className="text-gray-600 hover:text-gray-900 px-3 py-2 text-sm font-medium transition-colors"
+              >
+                About
+              </Link>
               <Link
                 to="/signin"
                 className="text-gray-600 hover:text-gray-900 px-3 py-2 text-sm font-medium transition-colors"
@@ -115,15 +122,42 @@ export default function LandingPage() {
 
           {/* Pricing Preview */}
           <div className="mt-20">
-            <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">
+            <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">
               Simple, Transparent Pricing
             </h2>
+            
+            {/* Monthly/Annual Toggle */}
+            <div className="flex justify-center mb-12">
+              <div className="bg-gray-100 rounded-full p-1 inline-flex">
+                <button 
+                  onClick={() => setIsAnnual(false)}
+                  className={`px-6 py-2 text-sm font-medium rounded-full transition-colors ${
+                    !isAnnual 
+                      ? 'bg-white text-gray-900 shadow-sm' 
+                      : 'text-gray-500 hover:text-gray-700'
+                  }`}
+                >
+                  Monthly
+                </button>
+                <button 
+                  onClick={() => setIsAnnual(true)}
+                  className={`px-6 py-2 text-sm font-medium rounded-full transition-colors ${
+                    isAnnual 
+                      ? 'bg-white text-gray-900 shadow-sm' 
+                      : 'text-gray-500 hover:text-gray-700'
+                  }`}
+                >
+                  Annually
+                </button>
+              </div>
+            </div>
+            
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
               {/* Free Tier */}
               <div className="border border-gray-200 rounded-2xl p-8 bg-white">
                 <div className="text-center">
                   <h3 className="text-lg font-semibold text-gray-900 mb-2">Free</h3>
-                  <div className="text-3xl font-bold text-gray-900 mb-4">$0</div>
+                  <div className="text-3xl font-bold text-gray-900 mb-4">₹0</div>
                   <ul className="text-sm text-gray-600 space-y-2 mb-6">
                     <li>✓ 5 monthly uploads</li>
                     <li>✓ 10MB max file size</li>
@@ -149,7 +183,15 @@ export default function LandingPage() {
                 </div>
                 <div className="text-center">
                   <h3 className="text-lg font-semibold text-gray-900 mb-2">Pro</h3>
-                  <div className="text-3xl font-bold text-gray-900 mb-4">$29</div>
+                  <div className="text-3xl font-bold text-gray-900 mb-4">
+                    {isAnnual ? '₹24,000' : '₹2,400'}
+                    {isAnnual && <span className="text-lg text-gray-500 font-normal">/year</span>}
+                  </div>
+                  {isAnnual && (
+                    <div className="text-sm text-green-600 font-medium mb-2">
+                      Save ₹4,800/year (20% off)
+                    </div>
+                  )}
                   <ul className="text-sm text-gray-600 space-y-2 mb-6">
                     <li>✓ 50 monthly uploads</li>
                     <li>✓ 100MB max file size</li>
@@ -171,7 +213,15 @@ export default function LandingPage() {
               <div className="border border-gray-200 rounded-2xl p-8 bg-white">
                 <div className="text-center">
                   <h3 className="text-lg font-semibold text-gray-900 mb-2">Enterprise</h3>
-                  <div className="text-3xl font-bold text-gray-900 mb-4">$99</div>
+                  <div className="text-3xl font-bold text-gray-900 mb-4">
+                    {isAnnual ? '₹82,000' : '₹8,200'}
+                    {isAnnual && <span className="text-lg text-gray-500 font-normal">/year</span>}
+                  </div>
+                  {isAnnual && (
+                    <div className="text-sm text-green-600 font-medium mb-2">
+                      Save ₹16,400/year (20% off)
+                    </div>
+                  )}
                   <ul className="text-sm text-gray-600 space-y-2 mb-6">
                     <li>✓ 500 monthly uploads</li>
                     <li>✓ 500MB max file size</li>
@@ -181,7 +231,7 @@ export default function LandingPage() {
                     <li>✓ Advanced features</li>
                   </ul>
                   <Link
-                    to="/signup"
+                    to="/contact"
                     className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors"
                   >
                     Contact Sales
@@ -198,10 +248,26 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="text-center">
             <div className="flex items-center justify-center mb-4">
-              <div className="h-6 w-6 bg-blue-600 rounded flex items-center justify-center mr-2">
-                <span className="text-white text-sm font-bold">📊</span>
-              </div>
-              <span className="text-lg font-bold text-gray-900">Instagraph</span>
+              <img 
+                src="/InstagraphLogo.png" 
+                alt="Instagraph Logo" 
+                className="h-auto"
+                style={{ width: '100px', height: 'auto' }}
+              />
+            </div>
+            <div className="flex justify-center space-x-6 mb-4">
+              <Link
+                to="/terms"
+                className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
+              >
+                Terms of Service
+              </Link>
+              <Link
+                to="/privacy"
+                className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
+              >
+                Privacy Policy
+              </Link>
             </div>
             <p className="text-sm text-gray-600">
               © 2025 Instagraph. All rights reserved.

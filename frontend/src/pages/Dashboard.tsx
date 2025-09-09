@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react'
 import { useAuth } from '../hooks/useAuth'
 import ProfileSetup from '../components/ProfileSetup'
 import FileUpload from '../components/FileUpload'
+import UserProfileDropdown from '../components/UserProfileDropdown'
 import UploadedFilesList from '../components/UploadedFilesList'
 
 export default function Dashboard() {
@@ -143,19 +144,11 @@ export default function Dashboard() {
                   />
                 </a>
               </div>
-              <div className="flex items-center space-x-4">
-                <div className="text-sm text-gray-600">
-                  Welcome, {user.email}
-                </div>
-                <div className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
-                  FREE
-                </div>
-                <button
-                  onClick={signOut}
-                  className="text-sm text-gray-600 hover:text-gray-900 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors"
-                >
-                  Sign Out
-                </button>
+              <div className="flex items-center">
+                <UserProfileDropdown 
+                  userEmail={user.email || ''} 
+                  subscriptionTier={'free'} 
+                />
               </div>
             </div>
           </div>
@@ -165,10 +158,10 @@ export default function Dashboard() {
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-gray-900 mb-4">
-              Welcome to Your Dashboard! 🎉
+              Welcome to Your Dashboard!
             </h1>
             <p className="text-lg text-gray-600 mb-8">
-              You're successfully authenticated. Upload your first Excel file to get started!
+              AI-Powered Dashboards from Your Data in Seconds.
             </p>
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-8">
               <p className="text-blue-800 text-sm">
@@ -200,27 +193,43 @@ export default function Dashboard() {
             </div>
           </div>
 
-          {/* File Upload Section */}
-          <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-sm border border-gray-200 p-8 mb-8">
-            <div className="text-center">
-              <h3 className="text-2xl font-semibold text-gray-900 mb-4">
-                Upload Your Data
-              </h3>
-              <p className="text-gray-600 mb-8">
-                Upload Excel (.xlsx, .xls, .xlsb) or CSV files to create AI-powered dashboards
-              </p>
+          {/* Side by Side Layout */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            {/* Upload File Section */}
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
+              <div className="text-center">
+                <h3 className="text-2xl font-semibold text-gray-900 mb-4">
+                  Upload Your Data
+                </h3>
+                <p className="text-gray-600 mb-8">
+                  Upload Excel (.xlsx, .xls, .xlsb) or CSV files to create AI-powered dashboards
+                </p>
+                
+                <FileUpload onUploadComplete={(file) => {
+                  console.log('File uploaded successfully:', file)
+                  // File will automatically redirect to DataViewer after processing
+                }} />
+              </div>
+            </div>
+
+            {/* Your Files Section */}
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
+              <div className="text-center mb-6">
+                <h3 className="text-2xl font-semibold text-gray-900 mb-4">
+                  Your Files
+                </h3>
+                <p className="text-gray-600">
+                  Manage and view your uploaded files
+                </p>
+              </div>
               
-              <FileUpload onUploadComplete={(file) => {
-                console.log('File uploaded successfully:', file)
-                // File will automatically redirect to DataViewer after processing
-              }} />
+              {/* Uploaded Files List */}
+              <div className="mb-6">
+                <UploadedFilesList limit={3} showViewMore={true} />
+              </div>
             </div>
           </div>
 
-          {/* Uploaded Files List */}
-          <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-sm border border-gray-200 p-8 mb-8">
-            <UploadedFilesList />
-          </div>
         </main>
       </div>
     )
@@ -232,7 +241,7 @@ export default function Dashboard() {
       {/* Header */}
       <header className="bg-white shadow-sm border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
+          <div className="flex justify-between items-center py-2">
             <div className="flex items-center">
               <a 
                 href="/" 
@@ -246,19 +255,11 @@ export default function Dashboard() {
                 />
               </a>
             </div>
-            <div className="flex items-center space-x-4">
-              <div className="text-sm text-gray-600">
-                Welcome, {displayProfile?.full_name || user?.email}
-              </div>
-              <div className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
-                {displayProfile?.subscription_tier?.toUpperCase() || 'FREE'}
-              </div>
-              <button
-                onClick={signOut}
-                className="text-sm text-gray-600 hover:text-gray-900 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors"
-              >
-                Sign Out
-              </button>
+            <div className="flex items-center">
+              <UserProfileDropdown 
+                userEmail={displayProfile?.full_name || user?.email || ''} 
+                subscriptionTier={displayProfile?.subscription_tier || 'free'} 
+              />
             </div>
           </div>
         </div>
@@ -268,10 +269,10 @@ export default function Dashboard() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-4">
-            Welcome to Your Dashboard! 🎉
+            Welcome to Your Dashboard!
           </h1>
           <p className="text-lg text-gray-600 mb-8">
-            You're successfully authenticated. Upload your first Excel file to get started!
+            AI-Powered Dashboards from Your Data in Seconds.
           </p>
         </div>
         
@@ -304,27 +305,43 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* File Upload Section */}
-        <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-sm border border-gray-200 p-8 mb-8">
-          <div className="text-center">
-            <h3 className="text-2xl font-semibold text-gray-900 mb-4">
-              Upload Your Data
-            </h3>
-            <p className="text-gray-600 mb-8">
-              Upload Excel (.xlsx, .xls, .xlsb) or CSV files to create AI-powered dashboards
-            </p>
+        {/* Side by Side Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+          {/* Upload File Section */}
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
+            <div className="text-center">
+              <h3 className="text-2xl font-semibold text-gray-900 mb-4">
+                Upload Your Data
+              </h3>
+              <p className="text-gray-600 mb-8">
+                Upload Excel (.xlsx, .xls, .xlsb) or CSV files to create AI-powered dashboards
+              </p>
+              
+              <FileUpload onUploadComplete={(file) => {
+                console.log('File uploaded successfully:', file)
+                // File will automatically redirect to DataViewer after processing
+              }} />
+            </div>
+          </div>
+
+          {/* Your Files Section */}
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
+            <div className="text-center mb-6">
+              <h3 className="text-2xl font-semibold text-gray-900 mb-4">
+                Your Files
+              </h3>
+              <p className="text-gray-600">
+                Manage and view your uploaded files
+              </p>
+            </div>
             
-            <FileUpload onUploadComplete={(file) => {
-              console.log('File uploaded successfully:', file)
-              // File will automatically redirect to DataViewer after processing
-            }} />
+            {/* Uploaded Files List */}
+            <div className="mb-6">
+              <UploadedFilesList limit={3} showViewMore={true} />
+            </div>
           </div>
         </div>
 
-        {/* Uploaded Files List */}
-        <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-sm border border-gray-200 p-8 mb-8">
-          <UploadedFilesList />
-        </div>
       </main>
     </div>
   )

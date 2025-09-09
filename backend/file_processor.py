@@ -99,18 +99,32 @@ class FileProcessor:
     def _generate_data_preview(self, df: pd.DataFrame, max_rows: int = 5) -> Dict[str, Any]:
         """Generate a preview of the data"""
         try:
-            # Get first few rows
-            preview_data = df.head(max_rows).to_dict('records')
+            # Create a copy of the dataframe for formatting
+            df_formatted = df.copy()
+            
+            # Format datetime columns to replace 'T' with '/'
+            for col in df_formatted.columns:
+                if df_formatted[col].dtype.name.startswith('datetime'):
+                    df_formatted[col] = df_formatted[col].dt.strftime('%Y-%m-%d/%H:%M:%S')
+            
+            # Get first few rows with formatted data
+            preview_data = df_formatted.head(max_rows).to_dict('records')
             
             # Get column information
             columns_info = []
             for col in df.columns:
+                # Format sample values for datetime columns
+                sample_values = df[col].dropna().head(3).tolist()
+                if df[col].dtype.name.startswith('datetime'):
+                    sample_values = [pd.to_datetime(val).strftime('%Y-%m-%d/%H:%M:%S') for val in sample_values]
+                
                 col_info = {
                     "name": col,
                     "type": str(df[col].dtype),
-                    "sample_values": df[col].dropna().head(3).tolist(),
+                    "sample_values": sample_values,
                     "null_count": df[col].isnull().sum(),
-                    "unique_count": df[col].nunique()
+                    "unique_count": df[col].nunique(),
+                    "unique_values": df[col].dropna().unique().tolist()  # Add all unique values for filtering
                 }
                 columns_info.append(col_info)
             
@@ -201,12 +215,14 @@ class FileProcessor:
         {data_summary}
         
         Please provide:
-        1. A brief summary of what this data represents
-        2. Key patterns or trends you notice
-        3. Data quality assessment
-        4. Recommended chart types for visualization
-        5. Any interesting insights or recommendations
+        1. A brief summary of what this data represents and its business context
+        2. Key patterns, trends, or anomalies you notice
+        3. Data quality assessment and potential issues
+        4. Recommended chart types for visualization based on the data structure
+        5. Business insights and actionable recommendations
+        6. Identify if this appears to be HR, Operations, Product, Inventory, Sales, or other business data
         
+        Consider the business context and provide domain-specific insights where applicable.
         Keep the response concise and actionable.
         """
     

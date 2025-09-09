@@ -4,8 +4,15 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { Toaster } from 'react-hot-toast'
 import { AuthProvider, useAuth } from './hooks/useAuth'
 import LandingPage from './pages/LandingPage'
+import About from './pages/About'
+import Contact from './pages/Contact'
+import Privacy from './pages/Privacy'
+import Terms from './pages/Terms'
 import Dashboard from './pages/Dashboard'
 import DataViewer from './pages/DataViewer'
+import UserProfile from './pages/UserProfile'
+import YourFiles from './pages/YourFiles'
+import PlanBilling from './pages/PlanBilling'
 import SignIn from './components/auth/SignIn'
 import SignUp from './components/auth/SignUp'
 import ForgotPassword from './components/auth/ForgotPassword'
@@ -62,6 +69,38 @@ function AppRoutes() {
         } 
       />
       <Route 
+        path="/about" 
+        element={
+          <PublicRoute>
+            <About />
+          </PublicRoute>
+        } 
+      />
+      <Route 
+        path="/contact" 
+        element={
+          <PublicRoute>
+            <Contact />
+          </PublicRoute>
+        } 
+      />
+      <Route 
+        path="/privacy" 
+        element={
+          <PublicRoute>
+            <Privacy />
+          </PublicRoute>
+        } 
+      />
+      <Route 
+        path="/terms" 
+        element={
+          <PublicRoute>
+            <Terms />
+          </PublicRoute>
+        } 
+      />
+      <Route 
         path="/signin" 
         element={
           <PublicRoute>
@@ -100,6 +139,30 @@ function AppRoutes() {
         element={
           <ProtectedRoute>
             <DataViewer />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/profile" 
+        element={
+          <ProtectedRoute>
+            <UserProfile />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/files" 
+        element={
+          <ProtectedRoute>
+            <YourFiles />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/plan-billing" 
+        element={
+          <ProtectedRoute>
+            <PlanBilling />
           </ProtectedRoute>
         } 
       />

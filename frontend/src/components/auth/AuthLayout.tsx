@@ -25,7 +25,7 @@ export default function AuthLayout({ children, title, subtitle }: AuthLayoutProp
               {title}
             </h2>
           )}
-          <p className="text-sm font-bold text-gray-800">
+          <p className="text-sm font-normal text-gray-800">
             {subtitle}
           </p>
         </div>
